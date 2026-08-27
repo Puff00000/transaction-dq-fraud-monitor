@@ -1,0 +1,14 @@
+pandas>=2.0
+streamlit>=1.35
+pytest>=8.0
+
+# BigQuery migration (optional locally -- only needed to actually run
+# against a real GCP project rather than the local CSV fallback)
+google-cloud-bigquery>=3.20
+db-dtypes>=1.2
+
+# Airflow (optional locally -- the DAG is written against these APIs but
+# a full Airflow install isn't required to read/understand/run the rest
+# of the pipeline; see docs/architecture.md)
+apache-airflow>=2.9
+apache-airflow-providers-google>=10.0
