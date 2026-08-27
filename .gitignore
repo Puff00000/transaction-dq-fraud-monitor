@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+.streamlit/secrets.toml
+*.log
+.DS_Store
+airflow.db
+airflow.cfg
+logs/
