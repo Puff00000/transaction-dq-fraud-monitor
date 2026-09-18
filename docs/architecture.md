@@ -2,6 +2,7 @@
 
 ## Pipeline diagram
 
+```
 ┌─────────────────────┐
 │ synthetic_generator  │   data/transactions.csv (5,000 txns, ~400 customers,
 │  (data/*.py)          │   deliberately dirty: missing IDs, dupes, negative
@@ -9,7 +10,7 @@
            │
            ▼
 ┌─────────────────────┐
-│   extract_load_raw    │   Airflow task -> BigQuery `transactions_raw`
+│   extract_load_raw    │   Airflow task -> BigQuery transactions_raw
 │  (Airflow DAG task 1) │   (partitioned by date, clustered by customer_id)
 └──────────┬───────────┘
            ▼
@@ -45,7 +46,7 @@
 │  Streamlit dashboard  │   dashboard/app.py -- reads BigQuery if
 │  (dashboard/app.py)   │   configured, else falls back to local CSVs
 └─────────────────────┘
-
+```
 
 
 ## Why this shape
