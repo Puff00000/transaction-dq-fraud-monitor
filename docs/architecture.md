@@ -2,6 +2,51 @@
 
 ## Pipeline diagram
 
+┌─────────────────────┐
+│ synthetic_generator  │   data/transactions.csv (5,000 txns, ~400 customers,
+│  (data/*.py)          │   deliberately dirty: missing IDs, dupes, negative
+└──────────┬───────────┘   amounts, future dates)
+           │
+           ▼
+┌─────────────────────┐
+│   extract_load_raw    │   Airflow task -> BigQuery `transactions_raw`
+│  (Airflow DAG task 1) │   (partitioned by date, clustered by customer_id)
+└──────────┬───────────┘
+           ▼
+┌─────────────────────┐
+│    run_dq_checks      │   src/dq_checks/*.py locally, or
+│  (Airflow DAG task 2) │   sql/dq_checks/dq_checks.sql on BigQuery
+│                        │   -> writes dq_issues (one row per check)
+└──────────┬───────────┘
+           ▼
+     ┌─────┴─────┐
+     │  dq_gate    │  BranchPythonOperator: did every CRITICAL check
+     │ (branch)    │  pass its threshold?
+     └──┬───────┬──┘
+   PASS │       │ FAIL
+        ▼       ▼
+┌───────────────┐ ┌──────────────┐
+│ run_fraud_     │ │ dq_fail_alert │  logs / pages -- fraud scoring
+│ scoring        │ │ (stub)        │  is SKIPPED on a bad batch, on
+│ (DAG task 4)   │ └──────┬───────┘  purpose (see below)
+└──────┬────────┘        │
+       ▼                 │
+┌─────────────────────┐  │
+│ load_curated_tables   │◄─┘
+│  (DAG task 5)          │   materializes dq_health_trend and
+└──────────┬───────────┘   fraud_bucket_distribution for the dashboard
+           ▼
+┌─────────────────────┐
+│ refresh_dashboard_    │
+│ view (DAG task 6)     │
+└──────────┬───────────┘
+           ▼
+┌─────────────────────┐
+│  Streamlit dashboard  │   dashboard/app.py -- reads BigQuery if
+│  (dashboard/app.py)   │   configured, else falls back to local CSVs
+└─────────────────────┘
+
+
 
 ## Why this shape
 
