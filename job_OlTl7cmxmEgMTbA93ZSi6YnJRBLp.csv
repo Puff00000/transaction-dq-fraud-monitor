@@ -1,0 +1,8 @@
+check_name,severity,affected_row_count,total_row_count,affected_pct,threshold_pct,passed,run_ts
+completeness.missing_customer_id,critical,47,5015,0.937,2.0,true,2026-09-17 07:10:53.027287 UTC
+completeness.missing_required_fields,critical,47,5015,0.937,1.0,true,2026-09-17 07:10:53.027287 UTC
+consistency.currency_country_mismatch,warning,71,5015,1.416,1.0,false,2026-09-17 07:10:53.027287 UTC
+consistency.future_dated_transaction,critical,16,5015,0.319,0.3,false,2026-09-17 07:10:53.027287 UTC
+uniqueness.duplicate_transaction_id,critical,30,5015,0.598,0.1,false,2026-09-17 07:10:53.027287 UTC
+validity.invalid_currency_code,warning,25,5015,0.499,0.5,true,2026-09-17 07:10:53.027287 UTC
+validity.negative_or_zero_amount,critical,32,5015,0.638,1.0,true,2026-09-17 07:10:53.027287 UTC
